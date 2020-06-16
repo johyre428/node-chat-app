@@ -13,13 +13,19 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
+  socket.emit('newMessage', 'Welcome to the Chat App!');
+  socket.broadcast.emit('newMessage', 'New user joined');
+  
   socket.on('createMessage', (message) => {
-    console.log('createMessage', message);
-    
     io.emit('newMessage', {
       ...message,
       createdAt: new Date().getTime()
     });
+    
+    // socket.broadcast.emit('newMessage', {
+    //   ...message,
+    //   createdAt: new Date().getTime()
+    // });
   });
   
   socket.on('disconnect', () => {
