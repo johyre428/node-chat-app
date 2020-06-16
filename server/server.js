@@ -13,14 +13,13 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
-  socket.emit('newMessage', {
-    from: 'john@example.com',
-    text: 'Yo!',
-    createdAt: 123
-  });
-  
   socket.on('createMessage', (message) => {
     console.log('createMessage', message);
+    
+    io.emit('newMessage', {
+      ...message,
+      createdAt: new Date().getTime()
+    });
   });
   
   socket.on('disconnect', () => {
